@@ -10,8 +10,9 @@ public class HelpCommand implements Command {
             <b>Available commands</b>
 
             <b>Start/Stop the bot</b>
-            /start - to start work with me\s
-            /stop - to stop work with me\s
+            /start - To make your status "active"\s
+            /stop - To make your status "inactive"\s
+            /stat - To show people using this bot\s
             /help - for help
             """;
 
