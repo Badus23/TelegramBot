@@ -13,7 +13,7 @@ public class HelpCommand implements Command {
             /start - To make your status "active"\s
             /stop - To make your status "inactive"\s
             /stat - To show people using this bot\s
-            /help - for help
+            /rate [abbreviate] - To check price in USDT. For example <b>/rate BTC</b>\s
             """;
 
     public HelpCommand(BotSendMessageService botSendMessageService) {

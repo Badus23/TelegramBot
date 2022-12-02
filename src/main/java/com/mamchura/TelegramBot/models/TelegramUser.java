@@ -1,6 +1,7 @@
 package com.mamchura.TelegramBot.models;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "tg_user")
@@ -12,6 +13,9 @@ public class TelegramUser {
 
     @Column(name = "active")
     private boolean active;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Cryptocurrency> cryptocurrencies;
 
     public TelegramUser() {
     }
@@ -30,5 +34,13 @@ public class TelegramUser {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Set<Cryptocurrency> getCryptocurrencies() {
+        return cryptocurrencies;
+    }
+
+    public void setCryptocurrencies(Set<Cryptocurrency> cryptocurrencies) {
+        this.cryptocurrencies = cryptocurrencies;
     }
 }

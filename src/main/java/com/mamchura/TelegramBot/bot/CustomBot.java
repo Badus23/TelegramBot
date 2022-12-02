@@ -1,7 +1,9 @@
 package com.mamchura.TelegramBot.bot;
 
 import com.mamchura.TelegramBot.commands.CommandContainer;
-import com.mamchura.TelegramBot.services.BotSendMessageServiceImpl;
+import com.mamchura.TelegramBot.commands.CommandName;
+import com.mamchura.TelegramBot.services.BotSendMessageService;
+import com.mamchura.TelegramBot.services.CryptocurrencyService;
 import com.mamchura.TelegramBot.services.TelegramUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static com.mamchura.TelegramBot.commands.CommandName.UNKNOWN;
+import java.util.Arrays;
 
 @Component
 public class CustomBot extends TelegramLongPollingBot {
@@ -22,21 +24,22 @@ public class CustomBot extends TelegramLongPollingBot {
     @Value("${bot_token}")
     private String token;
 
-    private final String PREFIX = "/";
+    public static String[] arguments;
 
     private final CommandContainer commandContainer;
 
     @Autowired
-    public CustomBot(TelegramUserService telegramUserService) {
-        this.commandContainer = new CommandContainer(new BotSendMessageServiceImpl(this), telegramUserService);
+    public CustomBot(TelegramUserService telegramUserService, CryptocurrencyService cryptocurrencyService) {
+        this.commandContainer = new CommandContainer(new BotSendMessageService(this), telegramUserService, cryptocurrencyService);
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String message = update.getMessage().getText().trim();
-            if (message.startsWith(PREFIX)) {
-                String commandIdentifier = message.split(" ")[0].toLowerCase();
+            if (Arrays.stream(CommandName.values()).anyMatch(e -> message.split(" ")[0].toLowerCase().equals(e.getCommandName()))) {
+                arguments = message.split(" ");
+                String commandIdentifier = arguments[0].toLowerCase();
 
                 commandContainer.retrieveCommand(commandIdentifier).execute(update);
             } else {
